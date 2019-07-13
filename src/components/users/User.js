@@ -1,11 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import Spinner from '../layout/Spinner';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Repos from '../Repos/Repos';
+import GithubContext from '../../contex/github/githubContext';
 
-const User = ({ user, repos, loading, getUser, getUserRepos, match }) => {
+const User = ({ match }) => {
+  const githubContext = useContext(GithubContext);
+
+  const { getUser, loading, user, getUserRepos, repos } = githubContext;
+
   useEffect(() => {
     getUser(match.params.login);
     getUserRepos(match.params.login);
@@ -59,7 +63,12 @@ const User = ({ user, repos, loading, getUser, getUserRepos, match }) => {
               <p>{bio}</p>
             </React.Fragment>
           )}
-          <a href={html_url} className='btn btn-dark my-1' target='_blank'>
+          <a
+            href={html_url}
+            className='btn btn-dark my-1'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
             Visit Github profile
           </a>
           <ul>
@@ -81,7 +90,7 @@ const User = ({ user, repos, loading, getUser, getUserRepos, match }) => {
               {blog && (
                 <React.Fragment>
                   <strong>Website: </strong>{' '}
-                  <a href={blog} target='_blank'>
+                  <a href={blog} target='_blank' rel='noopener noreferrer'>
                     {blog}
                   </a>
                 </React.Fragment>
@@ -99,14 +108,6 @@ const User = ({ user, repos, loading, getUser, getUserRepos, match }) => {
       <Repos repos={repos} />
     </React.Fragment>
   );
-};
-
-User.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
-  repos: PropTypes.array.isRequired,
-  getUser: PropTypes.func.isRequired,
-  getUserRepos: PropTypes.func.isRequired
 };
 
 export default User;
